@@ -2,16 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:lua_dardo/lua.dart';
 
 void main() {
-	LuaState state = LuaState.newState();
-	state.openLibs();
-	state.loadString(r'''
-a=10
-while( a < 20 ) do
-   print("a value is", a)
-   a = a+1
-end
-''');
-	state.call(0, 0);
 	runApp(const MyApp());
 }
 
@@ -52,6 +42,14 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
   LuaState ls = LuaState.newState();
+
+	void _resetCounter() {
+		setState(() {
+			ls.pushInteger(0);
+			ls.setGlobal("a");
+			_counter = 0;
+		});
+	}
 
   void _incrementCounter() {
     setState(() {
@@ -119,6 +117,11 @@ class _MyHomePageState extends State<MyHomePage> {
               '$_counter',
               style: Theme.of(context).textTheme.headline4,
             ),
+			FloatingActionButton(
+				onPressed: _resetCounter,
+				tooltip: 'Reset',
+				child: const Icon(Icons.arrow_back),
+			  ), 
           ],
         ),
       ),
